@@ -1,0 +1,39 @@
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/Red"
+    tools:context="com.strudel.alexeyool.strudel.SplashScreenActivity">
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="57dp"
+        android:layout_height="52dp"
+        android:scaleType="centerInside"
+        app:srcCompat="@drawable/s_white_150px"
+        tools:layout_editor_absoluteX="164dp"
+        tools:layout_editor_absoluteY="147dp" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="297dp"
+        android:layout_height="76dp"
+        android:scaleType="centerInside"
+        app:srcCompat="@drawable/logo_strudel_white_800px"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="217dp"
+        tools:layout_editor_absoluteX="44dp" />
+
+    <TextView
+        android:id="@+id/ASS_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/on_line_magazine"
+        android:textColor="@android:color/background_light"
+        android:textSize="18sp"
+        tools:layout_editor_absoluteX="111dp"
+        tools:layout_editor_absoluteY="312dp" />
+</android.support.constraint.ConstraintLayout>

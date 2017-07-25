@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".SplashScreenActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,8 +21,7 @@
         <activity android:name=".PrivacyActivity" />
         <activity android:name=".AboutActivity" />
         <activity
-            android:name=".SplashScreenActivity"
-            android:label="@string/title_activity_splash_screen">
+            android:name=".MainActivity" >
 
         </activity>
     </application>

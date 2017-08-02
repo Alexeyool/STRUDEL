@@ -21,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.ProgressBar;
 
 import com.strudel.alexeyool.strudel.viewpage.SliderActivity;
 
@@ -30,7 +31,13 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Handler;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -45,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     ListView list;
     ListAdapter listAdapter;
     ArrayList<Cover> coversArrayList;
+    ProgressBar progressBar;
 
     DownloadCovers downloadCovers;
 
@@ -56,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         mContext = this;
 
         actionBarCreate();
+        createProgressBar();
         createListView();
         downloadCoversToList();
 
@@ -68,6 +77,11 @@ public class MainActivity extends AppCompatActivity {
             downloadCovers.execute("");
         }
         downloadCovers.link(this);
+    }
+
+    private void createProgressBar() {
+        progressBar = (ProgressBar) findViewById(R.id.AM_progressBar);
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     private void createListView() {
@@ -158,44 +172,82 @@ public class MainActivity extends AppCompatActivity {
             return upend(activity.coversArrayList);
         }
 
+        protected void onPostExecute(ArrayList<Cover> result) {
+            activity.listAdapter = new ListAdapter(mContext, result);
+            activity.list.setAdapter(activity.listAdapter);
+            activity.progressBar.setVisibility(View.INVISIBLE);
+        }
+
+
         private void updateCoversFilesInInternalStorageFromUrls() {
             Log.e("myy", "updateCoversFilesInInternalStorageFromUrls");
             int i = 4;
             int j = 2017;
             while (i != 0) {
                 Cover cover = new Cover(i , j);
-                if (fileExist(cover.fileName)) {
-                    if (i < 12) {
-                        i++;
-                    } else {
-                        i = 1;
-                        j++;
-                    }
-                    activity.coversArrayList.add(cover);
-                }
-                else {
-                    try {
-                        InputStream inputStream = new java.net.URL(cover.getUrl()).openStream();
-                        Bitmap temp = BitmapFactory.decodeStream(inputStream);
-                        if (temp != null) {
-                            activity.coversArrayList.add(cover);
-                            saveToInternalStorage(cover, temp);
-                            if (i < 12) {
-                                i++;
-                            } else {
-                                i = 1;
-                                j++;
-                            }
+                if(fileExistInURL(cover)) {
+                    if (fileExist(cover.fileName)) {
+                        if (i < 12) {
+                            i++;
                         } else {
-                            i = 0;
+                            i = 1;
+                            j++;
                         }
-                    } catch (Exception e) {
-                        Log.e("myy", e.getMessage());
-                        i = 0;
-                        e.printStackTrace();
+                        activity.coversArrayList.add(cover);
+                    } else {
+                        try {
+                            InputStream inputStream = new java.net.URL(cover.getUrl()).openStream();
+
+                            Bitmap temp = BitmapFactory.decodeStream(inputStream);
+                            if (temp != null) {
+                                activity.coversArrayList.add(cover);
+                                saveToInternalStorage(cover, temp);
+                                if (i < 12) {
+                                    i++;
+                                } else {
+                                    i = 1;
+                                    j++;
+                                }
+                            } else {
+                                i = 0;
+                            }
+                        } catch (Exception e) {
+                            Log.e("myy", e.getMessage());
+                            i = 0;
+                            e.printStackTrace();
+                        }
                     }
+                }
+                else{
+                    if(fileExist(cover.fileName)){
+                        deleteFile(cover.fileName);
+                    }
+                    i=0;
                 }
             }
+        }
+
+        private boolean deleteFile(String _fileName){
+            ContextWrapper cw = new ContextWrapper(activity.getApplicationContext());
+            File directory = cw.getDir(COVERS_DIRECTORY, Context.MODE_PRIVATE);
+            File file = new File(directory, _fileName);
+            return file.delete();
+        }
+
+        private boolean fileExistInURL(Cover _cover) {
+
+            try {
+                HttpURLConnection.setFollowRedirects(false);
+                HttpURLConnection con =
+                        (HttpURLConnection) new URL(_cover.getUrl()).openConnection();
+                con.setRequestMethod("HEAD");
+                return (con.getResponseCode() == HttpURLConnection.HTTP_OK);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return false;
         }
 
         private boolean fileExist(String fname){
@@ -256,11 +308,6 @@ public class MainActivity extends AppCompatActivity {
             {
                 e.printStackTrace();
             }
-        }
-
-        protected void onPostExecute(ArrayList<Cover> result) {
-            activity.listAdapter = new ListAdapter(mContext, result);
-            activity.list.setAdapter(activity.listAdapter);
         }
 
         private ArrayList<Cover> upend(ArrayList<Cover> _temp){

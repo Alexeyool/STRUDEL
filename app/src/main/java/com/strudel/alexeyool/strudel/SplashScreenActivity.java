@@ -17,23 +17,23 @@ public class SplashScreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//       setContentView(R.layout.activity_splash_screen);
+       setContentView(R.layout.activity_splash_screen);
 
         hideActionBar();
 
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                Intent intent = new Intent();
-//                intent.setClass(SplashScreenActivity.this, MainActivity.class);
-//                startActivity(intent);
-//                finish();
-//            }
-//        },DELAY_MILLIS);
-        Intent intent = new Intent();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent();
                 intent.setClass(SplashScreenActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
+            }
+        },DELAY_MILLIS);
+//        Intent intent = new Intent();
+//                intent.setClass(SplashScreenActivity.this, MainActivity.class);
+//                startActivity(intent);
+//                finish();
 
     }
 

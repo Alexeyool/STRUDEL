@@ -23,7 +23,7 @@
         <activity android:name=".PrivacyActivity" />
         <activity android:name=".AboutActivity" />
         <activity android:name=".MainActivity"></activity>
-        <activity android:name=".SliderActivity"></activity>
+        <activity android:name=".viewpage.SliderActivity"></activity>
     </application>
 
 </manifest>

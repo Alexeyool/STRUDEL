@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/Red"
-    tools:context="com.strudel.alexeyool.strudel.SplashScreenActivity">
+    tools:context="com.strudel.alexeyool.strudel.secondary.SplashScreenActivity">
 
     <ImageView
         android:id="@+id/ASS_imageView_znak"

@@ -24,7 +24,7 @@ import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 
-import com.strudel.alexeyool.strudel.MainActivity;
+import com.strudel.alexeyool.strudel.main.MainActivity;
 import com.strudel.alexeyool.strudel.R;
 
 import java.io.File;

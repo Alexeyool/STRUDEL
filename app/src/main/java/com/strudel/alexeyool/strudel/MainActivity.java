@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
@@ -96,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra(MONTH, coversArrayList.get(position).getMonth());
             intent.putExtra(YEAR, coversArrayList.get(position).getYear());
             startActivity(intent);
+            stopDownloadCovers();
         }
     };
 
@@ -147,6 +149,25 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    @Override
+    public void finish() {
+        super.finish();
+        stopDownloadCovers();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopDownloadCovers();
+    }
+
+    private void stopDownloadCovers(){
+        downloadCovers = (DownloadCovers) getLastNonConfigurationInstance();
+        if(downloadCovers != null) {
+            downloadCovers.unLink();
+            downloadCovers.cancel(true);
+        }
+    }
 
     private static class DownloadCovers extends AsyncTask<String, Void, ArrayList<Cover>> {
         Context mContext;
@@ -175,6 +196,8 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(ArrayList<Cover> result) {
             activity.listAdapter = new ListAdapter(mContext, result);
             activity.list.setAdapter(activity.listAdapter);
+    //        activity.listAdapter.notifyDataSetChanged();
+
             activity.progressBar.setVisibility(View.INVISIBLE);
         }
 

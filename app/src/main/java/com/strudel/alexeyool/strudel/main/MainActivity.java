@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         mContext = this;
 
         actionBarCreate();
@@ -202,8 +201,8 @@ public class MainActivity extends AppCompatActivity {
 
         private void updateCoversFilesInInternalStorageFromUrls() {
             Log.e("myy", "updateCoversFilesInInternalStorageFromUrls");
-            int i = 4;
-            int j = 2017;
+            int i = 10;
+            int j = 2016;
             while (i != 0) {
                 Cover cover = new Cover(i , j);
                 if(fileExistInURL(cover)) {

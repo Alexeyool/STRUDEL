@@ -22,7 +22,9 @@
         </activity>
         <activity android:name=".secondary.PrivacyActivity" />
         <activity android:name=".secondary.AboutActivity" />
-        <activity android:name=".main.MainActivity"></activity>
+        <activity android:name=".main.MainActivity"
+                  android:screenOrientation="portrait" >
+        </activity>
         <activity android:name=".viewpage.SliderActivity"></activity>
     </application>
 

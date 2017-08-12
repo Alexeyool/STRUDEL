@@ -64,12 +64,15 @@ public class ListAdapter extends BaseAdapter {
         int orientation = mContext.getResources().getConfiguration().orientation;
         if(orientation == mContext.getResources().getConfiguration().ORIENTATION_PORTRAIT) {
             int width = parent.getResources().getDisplayMetrics().widthPixels;
-            int height = (int) (1.414 * width);
+            int height = (int) ((double)(coversList.get(position).getImage().getHeight()) * (double)width / (double)(coversList.get(position).getImage().getWidth()));
             holder.imageView.getLayoutParams().height = height;
         }
         else{
-            holder.imageView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
-            holder.imageView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+            int height = parent.getResources().getDisplayMetrics().heightPixels;
+            int width = (int) ((double)(coversList.get(position).getImage().getWidth()) * (double)height / (double)(coversList.get(position).getImage().getHeight()));
+            holder.imageView.getLayoutParams().width = width;
+//            holder.imageView.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
+//            holder.imageView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
         }
         holder.textView.setText(setTitle(position));
 

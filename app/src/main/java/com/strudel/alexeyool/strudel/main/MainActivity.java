@@ -15,17 +15,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
-import android.view.View;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 
+import com.strudel.alexeyool.strudel.R;
 import com.strudel.alexeyool.strudel.secondary.AboutActivity;
 import com.strudel.alexeyool.strudel.secondary.PrivacyActivity;
-import com.strudel.alexeyool.strudel.R;
 import com.strudel.alexeyool.strudel.viewpage.SliderActivity;
 
 import java.io.File;

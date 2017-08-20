@@ -9,9 +9,11 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.pdf.PdfRenderer;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -24,10 +26,12 @@ import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 
+import com.strudel.alexeyool.strudel.BuildConfig;
 import com.strudel.alexeyool.strudel.main.MainActivity;
 import com.strudel.alexeyool.strudel.R;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -39,10 +43,10 @@ import java.util.ArrayList;
 
 public class SliderActivity extends AppCompatActivity {
     private static final String PDF_DIRECTORY_NAME = "pdf_directory";
-//    private static final String PDF_DIRECTORY = "/data/user/0/com.strudel.alexeyool.strudel/app_pdf_directory";
     private static final String URL_PDF = "http://shtrudel.pro-depot.co.il/strudel_pdf/";
     private static final String SHARE_DIRECTORY = "share_directory";
     private static final String SHARE_FILE = "share_file.jpg";
+    private static final String PROVIDER = "com.strudel.alexeyool.provider";
     Context mContext;
 
     EnableDisableViewPager viewPager;
@@ -150,22 +154,33 @@ public class SliderActivity extends AppCompatActivity {
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            ContextWrapper cw = new ContextWrapper(getApplicationContext());
-            File directory = cw.getDir(SHARE_DIRECTORY, Context.MODE_PRIVATE);
-            directory.delete();
-            directory = cw.getDir(SHARE_DIRECTORY, Context.MODE_PRIVATE);
-            File file=new File(directory, "page" + viewPager.getCurrentItem()+ "_" +SHARE_FILE);
+            String fileName = SHARE_FILE;
+            File dir = mContext.getFilesDir();
+            File file = new File(dir, fileName );
+            if(file.delete()){
+                fileName = "a_" + SHARE_FILE;
+                file = new File(dir, fileName);
+            }
+            else{
+                fileName = "a_" + SHARE_FILE;
+                file = new File(dir, fileName);
+                file.delete();
+                fileName = SHARE_FILE;
+                file = new File(dir, fileName);
+            }
 
             FileOutputStream fileOutputStream = null;
+
             try {
+
                 PdfRenderer.Page currentPage = pdfRenderer.openPage(viewPager.getCurrentItem());
                 Bitmap bitmap = Bitmap.createBitmap(currentPage.getWidth(), currentPage.getHeight(), Bitmap.Config.ARGB_8888);
 
                 currentPage.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
                 currentPage.close();
                 bitmap = setWhiteBackgraundToBitmap(bitmap);
-                fileOutputStream = new FileOutputStream(file);
-                file.createNewFile();
+
+                fileOutputStream = openFileOutput(fileName, Context.MODE_PRIVATE);//new FileOutputStream(file);
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -178,9 +193,17 @@ public class SliderActivity extends AppCompatActivity {
             }
 
             file.setReadable(true, false);
-            Uri uri = Uri.fromFile(file);
+            Uri uri;
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                uri =FileProvider.getUriForFile(mContext.getApplicationContext(),
+                        PROVIDER, file);
+            }
+            else {
+                uri = Uri.fromFile(file);
+            }
 
             Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -189,6 +212,7 @@ public class SliderActivity extends AppCompatActivity {
             startActivity(Intent.createChooser(intent, "Set as:"));
         }
     };
+
 
     private Bitmap setWhiteBackgraundToBitmap(Bitmap _bitmap){
         int[] pixels = new int[_bitmap.getHeight() * _bitmap.getWidth()];

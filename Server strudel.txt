@@ -1,0 +1,7 @@
+Host:       shtrudel.pro-depot.co.il
+
+Username:   shtrudel@stambulchik.net
+
+Password:   4;mA{sSQ2pJ+
+
+Download:   https://filezilla-project.org/download.php

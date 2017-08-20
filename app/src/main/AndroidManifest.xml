@@ -3,6 +3,8 @@
     package="com.strudel.alexeyool.strudel">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.strudel.alexeyool.provider.READ"/>
+
 
     <application
         android:allowBackup="true"
@@ -11,6 +13,17 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.strudel.alexeyool.provider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            android:readPermission="com.company.app.fileprovider.READ">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
+
         <activity
             android:name=".secondary.SplashScreenActivity"
             android:label="@string/app_name">
@@ -25,7 +38,7 @@
         <activity android:name=".main.MainActivity"
                   android:screenOrientation="portrait" >
         </activity>
-        <activity android:name=".viewpage.SliderActivity"></activity>
+        <activity android:name=".viewpage.SliderActivity"/>
     </application>
 
 </manifest>
